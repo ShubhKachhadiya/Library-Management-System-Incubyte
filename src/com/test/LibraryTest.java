@@ -8,6 +8,8 @@ import java.time.Year;
 
 import org.junit.Test;
 
+import com.exceptions.DuplicateBookException;
+import com.exceptions.PermissionDeniedException;
 import com.exceptions.UserExistsException;
 import com.main.*;
 
@@ -60,5 +62,40 @@ public class LibraryTest {
         library.addUser(primaryLibrarian);
         User fetchedUser = library.getUserByName("Shubh");
         assertEquals(primaryLibrarian, fetchedUser);
+    }
+    
+//  Add book test case
+    @Test
+    public void testShouldAllowOnlyPermittedUserToAddBook() {
+        User user = new User("Shubh", User.Role.LIBRARIAN);
+
+        Book book = new Book("1234", "TDD", "Incubyte", Year.of(2025));
+        library.addBook(user, book);
+
+        Book storedBook = library.getBookByISBN("1234");
+
+        assertNotNull(storedBook);
+        assertEquals(book, storedBook);
+    }	
+
+    @Test
+    public void testShouldThrowExceptionIfUnauthorizedUserAddBook() {
+        User user = new User("Shubh", User.Role.USER);
+
+        Book book = new Book("1234", "TDD", "Incubyte", Year.of(2025));
+        PermissionDeniedException exception = assertThrows(PermissionDeniedException.class, () -> library.addBook(user, book));
+        assertEquals("You are not authorized to add book", exception.getMessage());
+    }
+    
+    @Test
+    public void testShouldNotAllowDuplicateBooks() {
+        User librarian = new User("Shubh", User.Role.LIBRARIAN);
+        Book book1 = new Book("1", "TDD1", "Incubyte", Year.of(2025));
+        Book book2 = new Book("1", "TDD2", "Incubyte", Year.of(2025));
+
+        library.addUser(librarian);
+        library.addBook(librarian, book1);
+        DuplicateBookException exception = assertThrows(DuplicateBookException.class, () -> library.addBook(librarian, book2));
+        assertEquals("Duplicate Book Not Allowed", exception.getMessage()); 
     }
 }
