@@ -2,6 +2,7 @@ package com.main;
 import java.util.Map;
 import java.util.HashMap;
 
+import com.exceptions.BookAlreadyBorrowedException;
 import com.exceptions.BookNotFoundException;
 import com.exceptions.DuplicateBookException;
 import com.exceptions.PermissionDeniedException;
@@ -66,8 +67,37 @@ public class Library {
         }
     }
     
+//  To check is book is already borrowed by some user   
+    private boolean isBookBorrowedBySomeUser(String isbn) {
+        return borrowedBooks.containsKey(isbn);
+    }
+
+//  To borrow the book from the system  
+    public void borrowBook(User user, String isbn) throws BookAlreadyBorrowedException, BookNotFoundException {
+        validateUser(user, "User should not be null");
+        Book book = bookInventory.get(isbn);
+
+        if(isBookBorrowedBySomeUser(isbn)) {
+            throw new BookAlreadyBorrowedException("Book is already borrowed");
+        }
+
+        validateBookNotNull(book,"Book not found");
+
+        borrowedBooks.put(isbn, user.getUserName());
+        borrowedBookDetails.put(isbn, book);
+        bookInventory.remove(isbn);
+    }
     
     
+//  To retrieve UserName who borrowed specific book based on isbn  
+    public String getBorrowerNameByISBN(String isbn) {
+        return borrowedBooks.get(isbn);
+    }
+    
+//  To retrieve book object from borrowed books using isbn 
+    public Book getBookByISBNFromBorrowedBook(String isbn) {
+        return borrowedBookDetails.get(isbn);
+    }
     
 //  To retrieve book object from inventory using isbn  
     public Book getBookByISBN(String isbn) {
