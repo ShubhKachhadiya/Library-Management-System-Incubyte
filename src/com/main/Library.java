@@ -102,6 +102,30 @@ public class Library {
         borrowedBooks.remove(isbn);
     }
     
+//  To retrieve all the available books in the system  
+    public Map<String, Book> viewAvailableBooks() {
+        return new HashMap<>(bookInventory);
+    }
+    
+//  To retrieve all the available books that are borrowed by User  
+    public Map<String, String> viewUserBorrowedBooks(User user) {
+    	validateUser(user, "User should not be null");
+    	Map<String, String> userBooks = new HashMap<String, String>();
+    	if(borrowedBooks.size() == 0) {
+    		return userBooks;
+    	}
+    	
+    	for (Map.Entry<String,String> mapElement : borrowedBooks.entrySet()) {
+            String key = mapElement.getKey();
+            String value = mapElement.getValue();
+            
+            if(value == user.getUserName()) {
+            	userBooks.put(key, value);
+            }
+    	}
+    	return userBooks;
+    }
+    
     
 //  To retrieve UserName who borrowed specific book based on isbn  
     public String getBorrowerNameByISBN(String isbn) {
