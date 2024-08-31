@@ -39,4 +39,8 @@ public class Library {
         userCatalog.put(user.getUserName(), user);
     }
 
+//  To retrieve User object from userName  
+    public User getUserByName(String userName) {
+        return userCatalog.get(userName);
+    }
 }
