@@ -46,5 +46,4 @@ public class User {
     public boolean isPermittedToAddBook() {
         return role == Role.LIBRARIAN;
     }
-
 }
