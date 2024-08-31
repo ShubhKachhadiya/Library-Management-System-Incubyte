@@ -57,3 +57,6 @@ This repository contains a Java project with JUnit tests. Follow the instruction
 3. Select `Run As` > `JUnit Test`.
 4. The JUnit view will open at the bottom of the Eclipse workspace showing the results of your test runs.
 5. Review the results to see which tests passed and which failed.
+
+## Test Report
+![image](https://github.com/user-attachments/assets/52f3fd22-2cf9-4a61-8c03-8af476603099)
