@@ -3,12 +3,8 @@ package com.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 
-import java.util.Map;
-
 import org.junit.Test;
-
-
-
+import com.main.*;
 
 public class LibraryTest {
 
@@ -17,6 +13,7 @@ public class LibraryTest {
     	Library library = new Library("Placement");
 	}
 
+    Library library = new Library("Placement");
     @Test
     public void testLibraryNameShouldNotbeNull() {
         assertThrows(IllegalArgumentException.class, () -> new Library(null));
