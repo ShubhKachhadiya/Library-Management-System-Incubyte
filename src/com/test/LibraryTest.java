@@ -167,4 +167,56 @@ public class LibraryTest {
 
         assertEquals(user.getUserName(), borrowerName);
     }
+    
+    
+//  Return book test cases
+    @Test
+    public void testShouldThrowExceptionWhenNoOneBorrowedBook() {
+        User librarian = new User("Shubh", User.Role.LIBRARIAN);
+        User user1 = new User("Drashti", User.Role.USER);
+        Book book = new Book("1234", "TDD", "Incubyte", Year.of(2025));
+
+        library.addUser(librarian);
+        library.addUser(user1);
+        library.addBook(librarian, book);
+
+        BookNotFoundException exception = assertThrows(BookNotFoundException.class, () -> library.returnBook(user1, "1234"));
+        assertEquals("Book was not borrowed by any user", exception.getMessage());
+    }
+
+    @Test
+    public void testShouldAllowUserToReturnBookToLibrary() {
+        User librarian = new User("Shubh", User.Role.LIBRARIAN);
+        User user = new User("Drashti", User.Role.USER);
+        Book book = new Book("1234", "TDD", "Incubyte", Year.of(2025));
+
+        library.addUser(librarian);
+        library.addUser(user);
+        library.addBook(librarian, book);
+
+        library.borrowBook(user, "1234");
+        library.returnBook(user, "1234");
+
+        Book returnedBook = library.getBookByISBN("1234");
+        assertNotNull(returnedBook);
+    }
+
+    @Test
+    public void testShouldThrowExceptionWhenUserReturnsBookThatIsNotBorrowedByHim() {
+        User librarian = new User("Shubh", User.Role.LIBRARIAN);
+        User user1 = new User("Drashti", User.Role.USER);
+        User user2 = new User("Rohan", User.Role.USER);
+        Book book = new Book("1234", "TDD", "Incubyte", Year.of(2025));
+
+        library.addUser(librarian);
+        library.addUser(user1);
+        library.addUser(user2);
+        library.addBook(librarian, book);
+
+        library.borrowBook(user1, "1234");
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> library.returnBook(user2, "1234"));
+        assertEquals("book was not borrowed by this user", exception.getMessage());
+    }
+
 }
