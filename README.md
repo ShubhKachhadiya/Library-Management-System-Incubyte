@@ -1,4 +1,4 @@
-#Kata: Library Management System
+# Kata: Library Management System
 A simple library management system that allows users to perform basic operations
 such as adding books, borrowing books, returning books, and viewing available books.
 
@@ -16,12 +16,12 @@ This repository contains a Java project with JUnit tests. Follow the instruction
 1. Open a terminal or command prompt.
 2. Clone the repository using Git:
 
-    git clone https://github.com/ShubhKachhadiya/Library-Management-System-Incubyte.git
+    `git clone https://github.com/ShubhKachhadiya/Library-Management-System-Incubyte.git`
     
 
 3. Navigate to the project directory:
 
-    cd Library_management_system
+    `cd Library_management_system`
 
 ### Import the Project into Eclipse
 
