@@ -88,6 +88,20 @@ public class Library {
         bookInventory.remove(isbn);
     }
     
+//  To return the book in the system  
+    public void returnBook(User user, String isbn) throws BookNotFoundException {
+        validateUser(user, "User should not be null");
+        if(!borrowedBooks.containsKey(isbn)) {
+            throw new BookNotFoundException("Book was not borrowed by any user");
+        }
+        if(!user.getUserName().equals(borrowedBooks.get(isbn))){
+            throw new IllegalArgumentException("book was not borrowed by this user");
+        }
+        Book book = getBookByISBNFromBorrowedBook(isbn);
+        bookInventory.put(isbn, book);
+        borrowedBooks.remove(isbn);
+    }
+    
     
 //  To retrieve UserName who borrowed specific book based on isbn  
     public String getBorrowerNameByISBN(String isbn) {
