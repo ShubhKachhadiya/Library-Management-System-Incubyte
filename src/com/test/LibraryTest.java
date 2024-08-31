@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 
 import java.time.Year;
+import java.util.Map;
 
 import org.junit.Test;
 
@@ -218,5 +219,39 @@ public class LibraryTest {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> library.returnBook(user2, "1234"));
         assertEquals("book was not borrowed by this user", exception.getMessage());
     }
+    
+//  Test to retieve all available books
+    @Test
+    public void testShouldRetrieveAllAvailableBooks() {
+        User librarian = new User("Shubh", User.Role.LIBRARIAN);
+        Book book1 = new Book("1", "TDD1", "Incubyte", Year.of(2025));
+        Book book2 = new Book("2", "TDD2", "Incubyte", Year.of(2025));
+
+        library.addUser(librarian);
+        library.addBook(librarian, book1);
+        library.addBook(librarian, book2);
+        
+        Map<String, Book> availableBooks = library.viewAvailableBooks();
+
+        assertEquals(2, availableBooks.size());
+    }
+    
+//  Test to retrieve books borrowed by user
+    @Test
+    public void testShouldRetrieveAllUserBorrowedBooks() {
+        User librarian = new User("Shubh", User.Role.LIBRARIAN);
+        Book book1 = new Book("1", "TDD1", "Incubyte", Year.of(2025));
+        Book book2 = new Book("2", "TDD2", "Incubyte", Year.of(2025));
+
+        library.addUser(librarian);
+        library.addBook(librarian, book1);
+        library.addBook(librarian, book2);
+        
+        library.borrowBook(librarian, "1");
+        Map<String, String> availableBooks = library.viewUserBorrowedBooks(librarian);
+
+        assertEquals(1, availableBooks.size());
+    }
+    
 
 }
