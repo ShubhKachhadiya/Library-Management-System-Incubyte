@@ -2,12 +2,15 @@ package com.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 
 import java.time.Year;
 
 import org.junit.Test;
 
+import com.exceptions.BookAlreadyBorrowedException;
+import com.exceptions.BookNotFoundException;
 import com.exceptions.DuplicateBookException;
 import com.exceptions.PermissionDeniedException;
 import com.exceptions.UserExistsException;
@@ -97,5 +100,71 @@ public class LibraryTest {
         library.addBook(librarian, book1);
         DuplicateBookException exception = assertThrows(DuplicateBookException.class, () -> library.addBook(librarian, book2));
         assertEquals("Duplicate Book Not Allowed", exception.getMessage()); 
+    }
+    
+    
+//  Borrow book test case
+    @Test
+    public void testShouldAllowToBorrowBookFromLibrary() {
+        User librarian = new User("Shubh", User.Role.LIBRARIAN);
+        User user = new User("Drashti", User.Role.USER);
+        Book book = new Book("1234", "TDD", "Incubyte", Year.of(2025));
+
+        library.addUser(librarian);
+        library.addUser(user);
+        library.addBook(librarian, book);
+
+        library.borrowBook(user, "1234");
+
+        Book borrowedBook = library.getBookByISBN("1234");
+        assertNull(borrowedBook);
+    }
+
+
+	@Test
+    public void testShouldThrowExceptionWhenBookNotFoundDuringBorrowRequest() {
+
+        User user = new User("Shubh", User.Role.USER);
+
+        library.addUser(user);
+
+        BookNotFoundException exception = assertThrows(BookNotFoundException.class, () -> library.borrowBook(user, "1234"));
+        assertEquals("Book not found", exception.getMessage());
+    }
+
+    @Test
+    public void testShouldThrowExceptionWhenBookIsAlreadyBorrowed() {
+
+        User librarian = new User("Shubh", User.Role.LIBRARIAN);
+        User user1 = new User("Drashti", User.Role.USER);
+        User user2 = new User("Rohan", User.Role.USER);
+        Book book = new Book("1234", "TDD", "Incubyte", Year.of(2015));
+
+        library.addUser(librarian);
+        library.addUser(user1);
+        library.addUser(user2);
+        library.addBook(librarian, book);
+
+        library.borrowBook(user1, "1234");
+
+        BookAlreadyBorrowedException exception = assertThrows(BookAlreadyBorrowedException.class, () -> library.borrowBook(user2, "1234"));
+        assertEquals("Book is already borrowed", exception.getMessage());
+    }
+    
+    @Test
+    public void testShouldReturnBorrowerNameWhoBorrowedBook() {
+        User librarian = new User("Shubh", User.Role.LIBRARIAN);
+        User user = new User("Drashti", User.Role.USER);
+        Book book = new Book("1234", "TDD", "Incubyte", Year.of(2025));
+
+        library.addUser(librarian);
+        library.addUser(user);
+        library.addBook(librarian, book);
+
+        library.borrowBook(user, "1234");
+
+        String borrowerName = library.getBorrowerNameByISBN("1234");
+
+        assertEquals(user.getUserName(), borrowerName);
     }
 }
